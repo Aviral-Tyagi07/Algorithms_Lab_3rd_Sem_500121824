@@ -1,61 +1,52 @@
  Implement the activity selection problem to get a clear understanding of greedy approach.
 
 #include <stdio.h>
-#include <limits.h>
+#include <stdlib.h>
 
-int smallest(int arr[], int n, int k) {
-    int min, result = INT_MIN;
-    for (int i = 0; i < k; i++) {
-        min = INT_MAX;
-        for (int j = 0; j < n; j++) {
-            if (arr[j] < min && arr[j] > result) {
-                min = arr[j];
-            }
-        }
-        result = min;
-    }
-    return result;
+// Structure to represent an activity
+typedef struct {
+    int start;
+    int end;
+} Activity;
+
+// Comparison function for sorting activities by their end times
+int compare(const void* a, const void* b) {
+    Activity* activityA = (Activity*)a;
+    Activity* activityB = (Activity*)b;
+    return activityA->end - activityB->end;
 }
 
-int largest(int arr[], int n, int k) {
-    int max, result = INT_MAX;
-    for (int i = 0; i < k; i++) {
-        max = INT_MIN;
-        for (int j = 0; j < n; j++) {
-            if (arr[j] > max && arr[j] < result) {
-                max = arr[j];
-            }
+// Function to perform the activity selection
+void activitySelection(Activity activities[], int n) {
+    // Sort activities by their end times
+    qsort(activities, n, sizeof(Activity), compare);
+
+    printf("Selected activities:\n");
+
+    // The first activity is always selected
+    int lastSelectedIndex = 0;
+    printf("Activity %d (Start: %d, End: %d)\n", 1, activities[0].start, activities[0].end);
+
+    // Consider the rest of the activities
+    for (int i = 1; i < n; i++) {
+        // If the activity's start time is greater than or equal to the end time
+        // of the last selected activity, select it
+        if (activities[i].start >= activities[lastSelectedIndex].end) {
+            printf("Activity %d (Start: %d, End: %d)\n", i + 1, activities[i].start, activities[i].end);
+            lastSelectedIndex = i;
         }
-        result = max;
     }
-    return result;
 }
 
 int main() {
-    int n, k;
-    printf("Enter the number of elements in the array: ");
-    scanf("%d", &n);
+    // Define an array of activities with start and end times
+    Activity activities[] = {
+        {1, 2}, {3, 4}, {0, 6}, {5, 7}, {8, 9}, {5, 9}
+    };
+    int n = sizeof(activities) / sizeof(activities[0]);
 
-    int arr[n];
-
-    printf("Enter the elements of the array:\n");
-    for (int i = 0; i < n; i++) {
-        scanf("%d", &arr[i]);
-    }
-
-    printf("Enter the value of k: ");
-    scanf("%d", &k);
-
-    if (k <= 0 || k > n) {
-        printf("Invalid value of k!\n");
-        return 1;
-    }
-
-    int kthSmallest = smallest(arr, n, k);
-    int kthLargest = largest(arr, n, k);
-
-    printf("The %d-th smallest element is: %d\n", k, kthSmallest);
-    printf("The %d-th largest element is: %d\n", k, kthLargest);
+    // Perform the activity selection
+    activitySelection(activities, n);
 
     return 0;
 }
