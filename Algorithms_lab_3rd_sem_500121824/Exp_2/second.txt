@@ -1,0 +1,83 @@
+Implement divide and conquer based merge sort and quick sort algorithms and compare their performance for the same set of elements. 
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* append(struct Node* head, int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    if (head == NULL) {
+        return newNode;
+    }
+    struct Node* temp = head;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+    temp->next = newNode;
+    return head;
+}
+
+struct Node* reverseList(struct Node* prev, struct Node* curr) {
+    if (curr == NULL) {
+        return prev;
+    }
+    struct Node* next = curr->next;
+    curr->next = prev;
+    return reverseList(curr, next);
+}
+
+void printList(struct Node* head) {
+    while (head != NULL) {
+        printf("%d->", head->data);
+        head = head->next;
+    }
+    printf("NULL\n");
+}
+
+void deleteListRecursive(struct Node* head) {
+    if (head == NULL) {
+        return;
+    }
+    deleteListRecursive(head->next);
+    free(head);
+}
+
+int main() {
+    struct Node* head = NULL;
+    head = append(head, 2);
+    head = append(head, 3);
+    head = append(head, 1);
+    head = append(head, 7);
+    head = append(head, 8);
+    head = append(head, 5);
+
+    int choice;
+    printf("Enter 1 to print the linked list, 2 to reverse it: ");
+    scanf("%d", &choice);
+
+    switch (choice) {
+        case 1:
+            printList(head);
+            deleteListRecursive(head);
+            head = NULL;
+            break;
+        case 2:
+            head = reverseList(NULL, head);
+            printf("Reversed linked list: ");
+            printList(head);
+            deleteListRecursive(head);
+            head = NULL;
+            break;
+        default:
+            printf("Invalid choice!\n");
+            deleteListRecursive(head);
+            head = NULL;
+            break;
+    }  return 0;
+}
