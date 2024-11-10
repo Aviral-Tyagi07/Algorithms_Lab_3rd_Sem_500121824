@@ -1,0 +1,71 @@
+Compare the performance of Strassen method of matrix multiplication with traditional way of matrix multiplication.
+
+#include <stdio.h>
+
+int main() {
+    int n1, n2;
+
+    // Input size of first array
+    printf("Enter the number of elements in the first array: ");
+    scanf("%d", &n1);
+    int arr1[n1];
+
+    // Input elements of first array
+    printf("Enter the elements of the first array:\n");
+    for (int i = 0; i < n1; i++) {
+        scanf("%d", &arr1[i]);
+    }
+
+    // Input size of second array
+    printf("Enter the number of elements in the second array: ");
+    scanf("%d", &n2);
+    int arr2[n2];
+
+    // Input elements of second array
+    printf("Enter the elements of the second array:\n");
+    for (int i = 0; i < n2; i++) {
+        scanf("%d", &arr2[i]);
+    }
+
+    // Array to hold the merged elements
+    int mergedArray[n1 + n2];
+
+    // Merging the arrays
+    int i = 0, j = 0, k = 0;
+    while (i < n1 && j < n2) {
+        if (arr1[i] < arr2[j])
+            mergedArray[k++] = arr1[i++];
+        else
+            mergedArray[k++] = arr2[j++];
+    }
+
+    // Adding remaining elements of first array (if any)
+    while (i < n1) {
+        mergedArray[k++] = arr1[i++];
+    }
+
+    // Adding remaining elements of second array (if any)
+    while (j < n2) {
+        mergedArray[k++] = arr2[j++];
+    }
+
+    // Sorting the merged array in increasing order
+    int temp;
+    for (i = 0; i < n1 + n2 - 1; i++) {
+        for (j = i + 1; j < n1 + n2; j++) {
+            if (mergedArray[i] > mergedArray[j]) {
+                temp = mergedArray[i];
+                mergedArray[i] = mergedArray[j];
+                mergedArray[j] = temp;
+            }
+        }
+    }
+
+    // Print the sorted merged array
+    printf("The merged and sorted array is:\n");
+    for (i = 0; i < n1 + n2; i++) {
+        printf("%d ", mergedArray[i]);
+    }
+
+    return 0;
+}
